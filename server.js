@@ -5,60 +5,76 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const expressValidator = require('express-validator');
 const mongoose = require('mongoose');
-const Survey = require('./models/survey.js');
-const UserInfo = require('./models/userinfo.js');
+const webpack = require('webpack');
+const Survey = require('./src/models/survey.js');
+const UserInfo = require('./src/models/userinfo.js');
+var config = require('./webpack.config.dev.js');
 const app = express();
 const url = 'mongodb://admin:sleephradmin@ds113700.mlab.com:13700/sleephr';
+const compiler = webpack(config);
 
-//====SETTING====//
-var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', "http://localhost:3000");/// react front end, try proxy later
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-}
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(allowCrossDomain);
+
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: config.output.publicPath
+}));
+app.use(require('webpack-hot-middleware')(compiler));
+
+//To serve static files
+app.use('/public', express.static('public'));
 
 //============ROUTING==========//
-app.get('/', function(req, res) {
-  res.json('undefined');
-});
-
-//====GET ALL SURVEY RESULT===//
-app.get('/api/survey', function(req, res) {
-  UserInfo.findOne({_id: req.body._id}).populate('surveys').then(eachOne => {
-    res.json(eachOne);
-  })
-});
-
-//====POST NEW SURVEY RESULT===//
-app.post('/api/survey', function(req, res) {
-  let recvSurvey = {
-    sleepDate: new Date(),
-    sleepQuality: parseInt(req.body.sleepQuality),
-    //sleepQuality: parseInt(req.body.sleepQuality),
-    stayUp: (req.body.stayUp === 'true')
-  }
-  if(recvSurvey.stayUp){
-    recvSurvey.stayUpReason = req.body.stayUpReason;
-  }
-  Survey.create(recvSurvey).then(survey => {
-    UserInfo.update({_id: req.body._id}, {$push: {surveys: survey._id}}).then(() =>
-      res.json('success')
-    )
+    //====GET ALL SURVEY RESULT===//
+  app.get('/api/survey', function(req, res) {
+    UserInfo.findOne({_id: req.body._id}).populate('surveys').then(eachOne => {
+      res.json(eachOne);
+    })
   });
+  
+  //====CREATE NEW USER===//
+  app.post('/api/createuser', function(req, res){
+    UserInfo.create({
+      _id: req.body._id,
+      userName: req.body.userName,
+    }).then(userinfo => res.json('success'))
+  });
+  
+  //====POST NEW SURVEY RESULT===//
+  app.post('/api/survey', function(req, res) {
+    let recvSurvey = {
+      sleepDate: new Date(),
+      sleepQuality: parseInt(req.body.sleepQuality),
+      //sleepQuality: parseInt(req.body.sleepQuality),
+      stayUp: req.body.stayUp
+    }
+    if(recvSurvey.stayUp){
+      recvSurvey.stayUpReason = req.body.stayUpReason;
+    }
+    Survey.create(recvSurvey).then(survey => {
+      if(survey.stayUp){
+        UserInfo.update({_id: req.body._id}, {$set: {longestDays: 0}, $inc:{stayUpDays: 1}, $push: {surveys: survey._id}}).then(() =>
+        res.json('success')
+      )}else{
+        UserInfo.update({_id: req.body._id}, {$inc: {longestDays: 1}, $push: {surveys: survey._id}}).then(() =>
+        res.json('success')
+      )}
+    });
+  });
+  
+  //======GET SCORE BOARD=======//
+  app.get('/api/scoreboard', function(req, res){
+    UserInfo.find({_id: {$in: req.body._id}}).then(eachOne => {
+      res.json(eachOne);
+    })
+  });
+
+//========SEND WEBSITE=======//
+app.get('*', function(req, res) {
+  res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-//======GET SCORE BOARD=======//
-app.get('/api/scoreboard', function(req, res){
-  UserInfo.find({_id: {$in: req.body._id}}).then(eachOne => {
-    res.json(eachOne);
-  })
-});
 
 //====MONGOOSE CONNECT===//
 mongoose.connect(url, function (err, db) {
@@ -69,7 +85,11 @@ mongoose.connect(url, function (err, db) {
     }
 });
 
-
-//=======START SERVER, LISTENING ON 5000=========//
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+//======LISTEN 5000======//
+app.listen(process.env.PORT || 5000, function(err) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+console.log('Listening at http://localhost:5000');
+});
