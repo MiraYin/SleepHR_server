@@ -9,7 +9,7 @@
   "devDependencies": {
     "concurrently": "^3.5.0"
   },
-  "main": "app.js",
+  "main": "server.js",
   "author": "",
   "license": "ISC",
   "description": ""

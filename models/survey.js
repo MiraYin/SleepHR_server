@@ -3,6 +3,10 @@ let Schema = mongoose.Schema;
 
 /// SCHEMA SETUP
 const surveySchema = new Schema({
+  sleepDate:{
+    type: mongoose.Schema.Types.Date,
+    required: true,
+  },
   sleepQuality:{
     type: mongoose.Schema.Types.Number,
     required: true,
@@ -20,7 +24,4 @@ const surveySchema = new Schema({
 /// surveySchema is a pattern; Survey is a compiled model with methods
 /// Survey.create; Survey.update
 const Survey = mongoose.model('Survey',surveySchema);
-
 module.exports = Survey;
-
-
