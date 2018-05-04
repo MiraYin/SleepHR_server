@@ -6,8 +6,8 @@ import { Route, IndexRoute } from 'react-router';
  */
 import App from './components/app';
 import Home from './components/views/home';
-import Contact from './components/views/contact';
 import Survey from './components/views/survey';
+import Scoreboard from './components/views/scoreboard';
 
 /**
  * All routes go here.
@@ -17,7 +17,7 @@ export default (
   <Route path='/' component={App}>
     <IndexRoute component={Home} />
     <Route path='survey' component={Survey} />
-    <Route path='contact' component={Contact} />
+    <Route path='scoreboard' component={Scoreboard}/>
     <Route path='*' component={Home} />
   </Route>
 );

@@ -41,34 +41,33 @@ app.use('/public', express.static('public'));
     }).then(userinfo => res.json('success'))
   });
   
-  //====POST NEW SURVEY RESULT===//
-  app.post('/api/survey', function(req, res) {
+//====POST NEW SURVEY RESULT api===//
+app.post('/api/survey', function(req, res) {
     let recvSurvey = {
-      sleepDate: new Date(),
-      sleepQuality: parseInt(req.body.sleepQuality),
-      //sleepQuality: parseInt(req.body.sleepQuality),
-      stayUp: req.body.stayUp
+        sleepDate: new Date(),
+        sleepQuality: parseInt(req.body.sleepQuality),
+        stayUp: req.body.stayUp
     }
     if(recvSurvey.stayUp){
-      recvSurvey.stayUpReason = req.body.stayUpReason;
+        recvSurvey.stayUpReason = req.body.stayUpReason;
     }
     Survey.create(recvSurvey).then(survey => {
-      if(survey.stayUp){
-        UserInfo.update({_id: req.body._id}, {$set: {longestDays: 0}, $inc:{stayUpDays: 1}, $push: {surveys: survey._id}}).then(() =>
-        res.json('success')
-      )}else{
-        UserInfo.update({_id: req.body._id}, {$inc: {longestDays: 1}, $push: {surveys: survey._id}}).then(() =>
-        res.json('success')
-      )}
+        if(survey.stayUp){
+            UserInfo.update({_id: req.body._id}, {$set: {longestDays: 0}, $inc:{stayUpDays: 1}, $push: {surveys: survey._id}}).then(() =>
+            res.json('success')
+        )}else{
+            UserInfo.update({_id: req.body._id}, {$inc: {longestDays: 1}, $push: {surveys: survey._id}}).then(() =>
+            res.json('success')
+        )}
     });
-  });
+});
   
-  //======GET SCORE BOARD=======//
-  app.get('/api/scoreboard', function(req, res){
-    UserInfo.find({_id: {$in: req.body._id}}).then(eachOne => {
-      res.json(eachOne);
-    })
-  });
+//======SCORE BOARD api=======//
+app.post('/api/scoreboard', function(req, res){
+    UserInfo.find({_id: {$in: req.body._ids}}).then(eachOne => {
+        res.json(eachOne)
+    });    
+});
 
 //========SEND WEBSITE=======//
 app.get('*', function(req, res) {

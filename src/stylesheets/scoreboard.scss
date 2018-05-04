@@ -1,0 +1,27 @@
+#scoreboard {
+    font-family: 'Open Sans', sans-serif;
+    margin: 1em;
+    display: flex;
+    flex-direction: column;
+      
+    .row {
+        display: flex;    
+        div {
+            flex: 1;
+            padding: 0.2rem 0.4em;
+            border: 1px solid rgb(238, 238, 238);
+        }
+    }
+      
+    .headerRow {
+        display: flex;    
+        background-color: rgb(238, 238, 238);
+        div { 
+            flex: 1;
+            padding: 0.2rem 0.4em;
+            border: 1px solid rgb(238, 238, 238);
+            cursor: pointer;
+        }
+    }
+}
+  
