@@ -120,12 +120,109 @@ class Pie extends React.Component{
 	}
 }
 
+class Legend extends React.Component{
+    render(){
+        var labels = this.props.labels,
+            colors = this.props.colors;
+
+        return(
+            <div className="Legend">
+			{ labels.map(function(label, labelIndex) {
+				return (
+				<div key={label}>
+					<span className="Legend--color" style={{ backgroundColor: colors[labelIndex]  }} />
+					<span className="Legend--label">{ label }</span>
+				</div>
+				);
+			}) }
+		    </div>
+        );
+    }
+}
+
+class Charts extends React.Component{
+    render(){
+        var self = this,
+            data = this.props.data,
+            min = Infinity,
+            max = 0,
+            colors = this.props.colors;
+    
+        for(let i = 0; i < data.length; i++){
+            if(data[i].end > max){
+                max = data[i].end;
+            }
+            if(data[i].start < min){
+                min = data[i].start;
+            }            
+        }
+
+        for(let i = 0; i < data.length; i++){
+            data[i].start -= min;
+            data[i].end -= min;
+        }
+
+        return (
+            <div className='Charts horizontal'>
+                <div className='Charts--serie'>
+                    <label>Sleep Analysis</label>
+                    {
+                        data.map(function (item, itemIndex) {
+                            console.log("item.end: " + item.end);
+                            console.log("item.start: " + item.start);
+
+                            var color = colors[item.sleepQuality], 
+                                style,
+                                duration = (item.end - item.start),
+								size = duration / (max-min) * 100;
+                            
+							style = {
+								backgroundColor: color,
+								opacity: duration / (max-min) + .05,
+								// zIndex: duration,
+                            };
+						
+                            style['width'] = size + '%';
+                            style['left'] = item.start/(max-min) * 100 + '%';
+							
+						 return (
+                             // b: right label
+							 <div
+							 	className='Charts--item'
+							 	style={ style }
+								key={ itemIndex }
+							    >
+							 	<b style={{color: color }}>{'hello'}</b>
+							 </div>
+                        );
+                    })
+                }
+                </div>
+            </div>
+        );
+    }
+}
+
 class Report extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             data: [],
         };
+        this.compareBy = this.compareBy.bind(this);
+        this.sortByKey = this.sortByKey.bind(this);
+    }
+
+    compareBy(key) {
+        return function (a, b) {
+          if (a[key] < b[key]) return  -1;
+          if (a[key] > b[key]) return 1;
+          return 0;
+        };
+    }
+     
+    sortByKey(key, array) {
+        array.sort(this.compareBy(key));
     }
 
     componentDidMount(){
@@ -141,7 +238,7 @@ class Report extends React.Component{
     render(){
         var reasonData = {},
             reasonSum = 0,
-            periodDate = {},
+            periodData = [],
             dataCopy = this.state.data,
             /// only plot past 14 days
             today = new Date(),
@@ -150,23 +247,49 @@ class Report extends React.Component{
             console.log(range);
 
         for(let i = 0; i < dataCopy.length; i++){
-            let date = new Date(dataCopy[i].sleepDate);
-            console.log(date);
-            if(today.getTime() - date.getTime() < range){
-                console.log(today.getTime() - date.getTime());
+            var wakedate = new Date(dataCopy[i].wakeDate), 
+                sleepdate = new Date(dataCopy[i].sleepDate);///wakeDate = surveyDate, i.e. next morning
+            console.log(wakedate);
+            console.log(sleepdate);
+
+            if(today.getTime() - wakedate.getTime() < range){
+                console.log(today.getTime() - wakedate.getTime());
                 /// within range
                 if(dataCopy[i].stayUp){
                     reasonSum++;
                     reasonData[dataCopy[i].stayUpReason] ? reasonData[dataCopy[i].stayUpReason]++ : reasonData[dataCopy[i].stayUpReason] = 1;
                 }
-                /// bar chart
-
+                
+                ///bar chart: {start,end,quality,labels}
+                if(sleepdate.getDate() != wakedate.getDate()){
+                    periodData.push({
+                        start: sleepdate.getHours() + sleepdate.getMinutes()/60 - 24,
+                        end: wakedate.getHours() + wakedate.getMinutes() / 60,
+                        date: wakedate,
+                        sleepQuality: dataCopy[i].sleepQuality
+                    });
+                }else{
+                    periodData.push({
+                        start: sleepdate.getHours() + sleepdate.getMinutes()/60,
+                        end: wakedate.getHours() + wakedate.getMinutes() / 60,
+                        date: wakedate,
+                        sleepQuality: dataCopy[i].sleepQuality
+                    });
+                }
             }
         }
 
+        this.sortByKey('date',periodData);
+
         return(
             <div>
-                <Pie data={reasonData} sum={reasonSum}/>
+                <div>
+                    <Pie data={reasonData} sum={reasonSum}/>
+                </div>
+                <div>
+                    <Charts data={ periodData } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']}/>
+                    <Legend labels={ [0, 1, 2, 3, 4].map(item => 'SleepQuality: '+item) } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']} />
+                </div>
             </div>
         );
     }

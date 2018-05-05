@@ -37,7 +37,8 @@ app.use('/public', express.static('public'));
 //====POST NEW SURVEY RESULT api===//
 app.post('/api/survey', function(req, res) {
     let recvSurvey = {
-        sleepDate: new Date(),
+        sleepDate: req.body.sleepDate,
+        wakeDate: new Date(),
         sleepQuality: parseInt(req.body.sleepQuality),
         stayUp: req.body.stayUp
     }

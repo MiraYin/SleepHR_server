@@ -7,6 +7,10 @@ const surveySchema = new Schema({
     type: mongoose.Schema.Types.Date,
     required: true,
   },
+  wakeDate:{
+    type: mongoose.Schema.Types.Date,
+    required: true,
+  },
   sleepQuality:{
     type: mongoose.Schema.Types.Number,
     required: true,
