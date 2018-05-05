@@ -142,13 +142,26 @@ class Report extends React.Component{
         var reasonData = {},
             reasonSum = 0,
             periodDate = {},
-            dataCopy = this.state.data;
-        for(var i = 0; i < dataCopy.length; i++){
-            if(dataCopy[i].stayUp){
-                reasonSum++;
-                reasonData[dataCopy[i].stayUpReason] ? reasonData[dataCopy[i].stayUpReason]++ : reasonData[dataCopy[i].stayUpReason] = 1;
+            dataCopy = this.state.data,
+            /// only plot past 14 days
+            today = new Date(),
+            range = this.props.location.query.analysisRange * 60 * 60 * 24 * 1000;
+
+            console.log(range);
+
+        for(let i = 0; i < dataCopy.length; i++){
+            let date = new Date(dataCopy[i].sleepDate);
+            console.log(date);
+            if(today.getTime() - date.getTime() < range){
+                console.log(today.getTime() - date.getTime());
+                /// within range
+                if(dataCopy[i].stayUp){
+                    reasonSum++;
+                    reasonData[dataCopy[i].stayUpReason] ? reasonData[dataCopy[i].stayUpReason]++ : reasonData[dataCopy[i].stayUpReason] = 1;
+                }
+                /// bar chart
+
             }
-            /// bar chart
         }
 
         return(
@@ -159,4 +172,5 @@ class Report extends React.Component{
     }
 }
 
+/// provide _id and analysisRange
 export default Report;
