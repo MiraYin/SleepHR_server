@@ -26,14 +26,15 @@ class Scoreboard extends React.Component {
         this.sortBy.bind(this);
   }
   
-  //this.props.location.query should be a JSON of FB friend list
+  // TODO: change to this.props.location.query once IOS APP done
+  // this.props.location.query should be a JSON of FB friend list
     componentDidMount(){
 
-        const getReq = {
-            _ids: ["126888448170255", "101276350746156", "111708899698271"]
-        };
+        // const getReq = {
+        //     _ids: ["126888448170255", "101276350746156", "111708899698271"]
+        // };
 
-        axios.post(`api/scoreboard`, getReq).then(res => {
+        axios.post(`api/scoreboard`, this.props.location.query.friendList).then(res => {
             console.log(res);
             console.log(res.data);
 
@@ -49,7 +50,7 @@ class Scoreboard extends React.Component {
             this.setState({
                 data: reconstructUserInfo
             });
-        })
+        });
     }
 
 

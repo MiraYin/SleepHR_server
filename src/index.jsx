@@ -7,6 +7,7 @@ require('./stylesheets/base.scss');
 require('./stylesheets/home.scss');
 require('./stylesheets/survey.scss');
 require('./stylesheets/scoreboard.scss');
+require('./stylesheets/report.scss');
 
 ReactDom.render(
   <Router history={browserHistory} routes={routes} />,

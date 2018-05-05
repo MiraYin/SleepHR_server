@@ -25,15 +25,8 @@ app.use(require('webpack-hot-middleware')(compiler));
 //To serve static files
 app.use('/public', express.static('public'));
 
-//============ROUTING==========//
-    //====GET ALL SURVEY RESULT===//
-  app.get('/api/survey', function(req, res) {
-    UserInfo.findOne({_id: req.body._id}).populate('surveys').then(eachOne => {
-      res.json(eachOne);
-    })
-  });
-  
-  //====CREATE NEW USER===//
+//============ROUTING==========//  
+//====CREATE NEW USER===//
   app.post('/api/createuser', function(req, res){
     UserInfo.create({
       _id: req.body._id,
@@ -68,6 +61,14 @@ app.post('/api/scoreboard', function(req, res){
         res.json(eachOne)
     });    
 });
+
+//========REPORT API========//
+app.post('/api/report', function(req, res){
+  UserInfo.findOne({_id: req.body._id}).populate('surveys').then(one => {
+    res.json(one.surveys);
+  })  
+});
+
 
 //========SEND WEBSITE=======//
 app.get('*', function(req, res) {
