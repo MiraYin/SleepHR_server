@@ -186,14 +186,15 @@ class Charts extends React.Component{
                             style['left'] = item.start/(max-min) * 100 + '%';
 							
 						 return (
-                             // b: right label
-							 <div
-							 	className='Charts--item'
-							 	style={ style }
-								key={ itemIndex }
-							    >
-							 	<b style={{color: color }}>{'hello'}</b>
-							 </div>
+                            <div key={ itemIndex }>
+                                <div className='labelitem'>{item.date.toLocaleDateString()}</div>
+							    <div
+							 	    className='Charts--item'
+							 	    style={ style }
+							        >
+							 	    <b style={{color: color }}>{duration.toFixed(1) + 'hrs'}</b>
+							    </div>
+                            </div>
                         );
                     })
                 }
@@ -282,7 +283,7 @@ class Report extends React.Component{
         this.sortByKey('date',periodData);
 
         return(
-            <div>
+            <div className='report'>
                 <div>
                     <Pie data={reasonData} sum={reasonSum}/>
                 </div>

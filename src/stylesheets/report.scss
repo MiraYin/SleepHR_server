@@ -1,3 +1,7 @@
+.report{
+  background-color: #f9f9f9;
+}
+
 svg {
     display: inline-block;
     vertical-align: middle;
@@ -10,6 +14,14 @@ svg {
       font-weight: bolder;
       font-size: 12px;
     }
+}
+
+.labelitem{
+  display: inline-block;
+  font-family: Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  color: #808080;
 }
 
 .Charts {
@@ -26,7 +38,7 @@ svg {
 	
 	&.horizontal &--serie {
 		display: block;
-		margin: 0 0 30px 0;
+		margin: 0 0 0 0;
 		border: 0;
 		
 		label {
@@ -64,14 +76,14 @@ svg {
 	}
 	
 	&.horizontal &--item {
-		display: block;
-		border-radius: 0 2px 2px 0;
+		display: block;//inline block can force a label before
+		border-radius: 2px 2px 2px 2px;
 		margin: 0 0 5px 0;
 		height: 1em;
 		
 		b {
 			position: absolute;
-			right: -20px;
+			right: -40px;
 			top: .3em;
     }
 	}
@@ -119,7 +131,7 @@ svg {
 	to { transform: scaleY(1); }
 }
   
-  @keyframes scale {
-      from { transform: scale(.5); }
-      to { transform: scale(1); }
-  }
+@keyframes scale {
+  from { transform: scale(.5); }
+  to { transform: scale(1); }
+}
