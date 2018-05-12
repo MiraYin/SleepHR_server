@@ -26,29 +26,30 @@ class Scoreboard extends React.Component {
         this.sortBy.bind(this);
   }
   
-  // TODO: change to this.props.location.query once IOS APP done
-  // this.props.location.query should be a JSON of FB friend list
     componentDidMount(){
-
-        // const getReq = {
-        //     _ids: ["126888448170255", "101276350746156", "111708899698271"]
-        // };
-
-        axios.post(`api/scoreboard`, this.props.location.query.friendList).then(res => {
+        axios.post(`/api/scoreboard`, {fbid: this.props.location.query.fbid}).then(res => {
+            console.log(this.props.location.query.fbid)
             console.log(res);
             console.log(res.data);
 
-            var reconstructUserInfo = res.data.map(ui => {
+            var retrievedData = res.data.friends.map(friend => {
                 return ({
-                    _id: ui._id,
-                    name: ui.userName,
-                    longestDays: ui.longestDays,
-                    stayUpRate: (ui.stayUpDays / ui.surveys.length * 100).toFixed(2)
+                    fbid: friend.fbid,
+                    name: friend.userName,
+                    longestDays: friend.longestDays? friend.longestDays: NaN,
+                    stayUpRate: friend.surveys.length? (friend.stayUpDays / friend.surveys.length * 100).toFixed(2) : NaN
                 });
             })
 
+            retrievedData.push({
+                fbid: res.data.fbid, 
+                name: res.data.userName, 
+                longestDays: res.data.longestDays,
+                stayUpRate: (res.data.stayUpDays / res.data.surveys.length * 100).toFixed(2)
+            });
+
             this.setState({
-                data: reconstructUserInfo
+                data: retrievedData
             });
         });
     }
@@ -56,9 +57,16 @@ class Scoreboard extends React.Component {
 
   compareBy(key, increase) {
     return function (a, b) {
-      if (a[key] < b[key]) return (increase ? -1 : 1);
-      if (a[key] > b[key]) return (increase ? 1 :-1);
-      return 0;
+        if(!isFinite(a) && !isFinite(b)){
+            return 0;
+        }
+        if( !isFinite(a) ) {
+            return -1;
+        }
+        if( !isFinite(b) ) {
+            return 1;
+        }
+        return (increase ? a[key]-b[key] : b[key]-a[key]);
     };
   }
  
@@ -74,7 +82,7 @@ class Scoreboard extends React.Component {
   }
     
   render() {
-    const rows = this.state.data.map( (rowData) => <Row key={rowData._id} data={rowData} />);
+    const rows = this.state.data.map( (rowData) => <Row key={rowData.fbid} data={rowData} />);
 
     return (
       <div id="scoreboard">

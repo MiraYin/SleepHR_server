@@ -4,7 +4,7 @@ const Survey = require('./survey.js')
 
 
 const userinfoSchema = new Schema({
-    _id: {
+    fbid: {
         type: mongoose.Schema.Types.String,
         required: true,
     },
@@ -15,6 +15,11 @@ const userinfoSchema = new Schema({
     surveys: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Survey',
+        required: false,
+    }],
+    friends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserInfo',
         required: false,
     }],
     longestDays: {

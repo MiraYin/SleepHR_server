@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const expressValidator = require('express-validator');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const webpack = require('webpack');
 const Survey = require('./src/models/survey.js');
 const UserInfo = require('./src/models/userinfo.js');
@@ -27,12 +28,21 @@ app.use('/public', express.static('public'));
 
 //============ROUTING==========//  
 //====CREATE NEW USER===//
-  app.post('/api/createuser', function(req, res){
-    UserInfo.create({
-      _id: req.body._id,
-      userName: req.body.userName,
-    }).then(userinfo => res.json('success'))
-  });
+app.post('/api/updateuser', function(req, res){
+    UserInfo.find({fbid: {$in: req.body.friends}}).then(friends => {
+      var friendsID = []
+      friends.forEach(function(one){
+        friendsID.push(one._id);
+      });
+      return Promise.all(friendsID );
+  }).then((friendsID) => {
+    console.log(friendsID);
+    console.log(req.body._id);
+    UserInfo.findOneAndUpdate({fbid: req.body._id}, {$set: {userName: req.body.userName, friends: friendsID}}, {new: true, upsert: true}, function(err, user){
+        res.json('success');  
+    })
+  })
+});
   
 //====POST NEW SURVEY RESULT api===//
 app.post('/api/survey', function(req, res) {
@@ -47,10 +57,10 @@ app.post('/api/survey', function(req, res) {
     }
     Survey.create(recvSurvey).then(survey => {
         if(survey.stayUp){
-            UserInfo.update({_id: req.body._id}, {$set: {longestDays: 0}, $inc:{stayUpDays: 1}, $push: {surveys: survey._id}}).then(() =>
+            UserInfo.update({fbid: req.body._id}, {$set: {longestDays: 0}, $inc:{stayUpDays: 1}, $push: {surveys: survey._id}}).then(() =>
             res.json('success')
         )}else{
-            UserInfo.update({_id: req.body._id}, {$inc: {longestDays: 1}, $push: {surveys: survey._id}}).then(() =>
+            UserInfo.update({fbid: req.body._id}, {$inc: {longestDays: 1, stayUpDays: 0}, $push: {surveys: survey._id}}).then(() =>
             res.json('success')
         )}
     });
@@ -58,14 +68,14 @@ app.post('/api/survey', function(req, res) {
   
 //======SCORE BOARD api=======//
 app.post('/api/scoreboard', function(req, res){
-    UserInfo.find({_id: {$in: req.body._ids}}).then(eachOne => {
-        res.json(eachOne)
+    UserInfo.findOne({fbid: req.body.fbid}).populate('friends').then(user => {
+        res.json(user)
     });    
 });
 
 //========REPORT API========//
 app.post('/api/report', function(req, res){
-  UserInfo.findOne({_id: req.body._id}).populate('surveys').then(one => {
+  UserInfo.findOne({fbid: req.body._id}).populate('surveys').then(one => {
     res.json(one.surveys);
   })  
 });
