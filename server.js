@@ -37,8 +37,8 @@ app.use('/public', express.static('public'));
 //====POST NEW SURVEY RESULT api===//
 app.post('/api/survey', function(req, res) {
     let recvSurvey = {
-        sleepDate: req.body.sleepDate,
-        wakeDate: new Date(),
+        sleepDate: new Date(parseInt(req.body.sleepDate)),
+        wakeDate: new Date(parseInt(req.body.wakeDate)),
         sleepQuality: parseInt(req.body.sleepQuality),
         stayUp: req.body.stayUp
     }
@@ -92,5 +92,4 @@ app.listen(process.env.PORT || 5000, function(err) {
     console.log(err);
     return;
   }
-console.log('Listening at http://localhost:5000');
 });

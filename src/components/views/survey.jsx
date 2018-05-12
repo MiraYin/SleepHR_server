@@ -35,11 +35,14 @@ class Survey extends React.Component{
         super(props);
         this.state = {
             _id: props.location.query._id,
+            sleepDate: new Date(parseInt(props.location.query.timeToSleep)),
+            wakeDate: new Date(parseInt(props.location.query.timeToWake)),
             sleepQuality: 0,
             stayUpFlag: false,
             stayUpReason: null
         }
-        // console.log(props);
+        console.log(props);
+        console.log(this.state);
         this.handlerFlagOnChange=this.handlerFlagOnChange.bind(this);
         this.handlerQualityOnChange=this.handlerQualityOnChange.bind(this);
         this.handlerOnSubmit=this.handlerOnSubmit.bind(this);
@@ -53,8 +56,11 @@ class Survey extends React.Component{
         const postReq = {
             _id: this.state._id,
             sleepQuality: this.state.sleepQuality,
+            sleepDate: this.state.sleepDate.getTime(),
+            wakeDate: this.state.wakeDate.getTime(),
             stayUp: this.state.stayUpFlag,
         };
+        console.log(postReq);
         if(postReq.stayUp){
             postReq.stayUpReason = this.state.stayUpReason;
         }
