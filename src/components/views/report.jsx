@@ -285,7 +285,7 @@ class Report extends React.Component{
         return(
             <div className='report'>
                 <div>
-                    <Pie data={reasonData} sum={reasonSum}/>
+        {(reasonSum? (reasonSum > 1 ? <Pie data={reasonData} sum={reasonSum}/>: <h1>The only reason for staying up late found in 10 days is: {Object.keys(reasonData)[0]}</h1>) : <h1>No Staying Up Record found in 10 days. Good Job! Keep it Up!</h1>)}
                 </div>
                 <div>
                     <Charts data={ periodData } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']}/>
