@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import {browserHistory} from 'react-router';
 
 class StayUp extends React.Component{
     constructor(props){
@@ -65,11 +66,12 @@ class Survey extends React.Component{
             postReq.stayUpReason = this.state.stayUpReason;
         }
 
-        axios.post(`api/survey`, postReq).then(res => {
+        axios.post(`/api/survey`, postReq).then(res => {
           console.log(res);
           console.log(res.data);
         })
-        event.preventDefault();
+        browserHistory.push('/');
+        //event.preventDefault();
     }
     
     handlerFlagOnChange(event){

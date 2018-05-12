@@ -27,8 +27,8 @@ class Scoreboard extends React.Component {
   }
   
     componentDidMount(){
-        axios.post(`/api/scoreboard`, {fbid: this.props.location.query.fbid}).then(res => {
-            console.log(this.props.location.query.fbid)
+        axios.post(`/api/scoreboard`, {fbid: this.props.location.query._id}).then(res => {
+            console.log(this.props.location.query._id)
             console.log(res);
             console.log(res.data);
 

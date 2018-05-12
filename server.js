@@ -29,6 +29,7 @@ app.use('/public', express.static('public'));
 //============ROUTING==========//  
 //====CREATE NEW USER===//
 app.post('/api/updateuser', function(req, res){
+  console.log("recv a post");
     UserInfo.find({fbid: {$in: req.body.friends}}).then(friends => {
       var friendsID = []
       friends.forEach(function(one){
