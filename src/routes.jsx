@@ -9,6 +9,7 @@ import Home from './components/views/home';
 import Survey from './components/views/survey';
 import Scoreboard from './components/views/scoreboard';
 import Report from './components/views/report';
+import Success from './components/views/success';
 
 /**
  * All routes go here.
@@ -20,6 +21,7 @@ export default (
     <Route path='survey' component={Survey} />
     <Route path='scoreboard' component={Scoreboard}/>
     <Route path='report' component={Report}/>
+    <Route path='success' component={Success}/>
     <Route path='*' component={Home} />
   </Route>
 );

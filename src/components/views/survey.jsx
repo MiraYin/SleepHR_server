@@ -9,6 +9,7 @@ class StayUp extends React.Component{
     }
     
     handlerOnChange(event){
+        console.log(event.target.value);
         this.props.handlerOnReasonChange(event.target.value);
     }
     
@@ -40,7 +41,7 @@ class Survey extends React.Component{
             wakeDate: new Date(parseInt(props.location.query.timeToWake)),
             sleepQuality: 0,
             stayUpFlag: false,
-            stayUpReason: null
+            stayUpReason: 'work'
         }
         console.log(props);
         console.log(this.state);
@@ -70,7 +71,7 @@ class Survey extends React.Component{
           console.log(res);
           console.log(res.data);
         })
-        browserHistory.push('/');
+        browserHistory.push('/success');
         //event.preventDefault();
     }
     
@@ -106,7 +107,7 @@ class Survey extends React.Component{
                 </select>
             </label>
             <br />
-            <label>Did you go to sleep as scheduled?
+            <label>Did you stay up last night? If so, please check the box.
                 <input type="checkbox" onChange={this.handlerFlagOnChange}/>
             </label>
             <br />
