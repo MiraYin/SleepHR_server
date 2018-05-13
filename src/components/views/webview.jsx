@@ -1,20 +1,37 @@
 import React from 'react';
 import axios from 'axios';
-import FacebookLogin from 'react-facebook-login';
 
 class WebView extends React.Component{
     constructor(props){
         super(props);
         this.state = {};
-        this.responseFacebook = this.responseFacebook.bind(this);
+        this.checkLoginState = this.checkLoginState.bind(this);
     }
 
-    responseFacebook(response){
+    //run after login is successful
+    fetchprofile(){
+        console.log('Fetching profile.... ');
+        FB.api('/me', function(response) {
+        console.log('Successful login for: ' + response.name);
+        browserHistory.push('/success');
+    });
+
+    }
+    // called when someone finishes with the Login Button
+    checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+    }
+    
+    // called with the results from from FB.getLoginStatus().
+    statusChangeCallback(response) {
+        console.log('statusChangeCallback');
         console.log(response);
-    }
-
-    onClickHandler(){
-        console.log('clicked');
+        if (response.status === 'connected') {
+          // Logged into your app and Facebook.
+            testAPI();
+        } 
     }
 
     render(){
@@ -28,19 +45,13 @@ class WebView extends React.Component{
             </div>
           
             <div class="fb-login-button" 
+            onlogin={this.checkLoginState}
             data-max-rows="1" 
             data-size="large" 
             data-button-type="continue_with" 
             data-show-faces="false" 
             data-auto-logout-link="false" 
             data-use-continue-as="false"></div>
-
-            {/* <FacebookLogin
-            appId="1950569411924737"
-            autoLoad={true}
-            fields="name,email,picture"
-            onClick={this.onClickHandler}
-            callback={this.responseFacebook} /> */}
             </div>
         );
     }
