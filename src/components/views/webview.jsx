@@ -47,7 +47,7 @@ class WebView extends React.Component{
             </div>
           
             <div class="fb-login-button" 
-            onlogin={this.checkLoginState}
+            data-onlogin={this.checkLoginState}
             data-max-rows="1" 
             data-size="large" 
             data-button-type="continue_with" 
