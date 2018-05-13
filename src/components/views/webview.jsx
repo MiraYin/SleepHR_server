@@ -6,6 +6,8 @@ class WebView extends React.Component{
         super(props);
         this.state = {};
         this.checkLoginState = this.checkLoginState.bind(this);
+        this.fetchprofile = this.fetchprofile.bind(this);
+        this.statusChangeCallback = this.statusChangeCallback.bind(this);
     }
 
     //run after login is successful
@@ -20,7 +22,7 @@ class WebView extends React.Component{
     // called when someone finishes with the Login Button
     checkLoginState() {
         FB.getLoginStatus(function(response) {
-          statusChangeCallback(response);
+            this.statusChangeCallback(response);
         });
     }
     
@@ -30,7 +32,7 @@ class WebView extends React.Component{
         console.log(response);
         if (response.status === 'connected') {
           // Logged into your app and Facebook.
-            testAPI();
+            this.fetchprofile()
         } 
     }
 
