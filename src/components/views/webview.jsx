@@ -19,12 +19,29 @@ class WebView extends React.Component{
 
     render(){
         return (
-            <FacebookLogin
+            <div>
+            <div
+                class="fb-like"
+                data-share="true"
+                data-width="450"
+                data-show-faces="true">
+            </div>
+          
+            <div class="fb-login-button" 
+            data-max-rows="1" 
+            data-size="large" 
+            data-button-type="continue_with" 
+            data-show-faces="false" 
+            data-auto-logout-link="false" 
+            data-use-continue-as="false"></div>
+
+            {/* <FacebookLogin
             appId="1950569411924737"
             autoLoad={true}
             fields="name,email,picture"
             onClick={this.onClickHandler}
-            callback={this.responseFacebook} />
+            callback={this.responseFacebook} /> */}
+            </div>
         );
     }
 }
