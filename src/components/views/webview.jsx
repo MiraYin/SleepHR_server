@@ -6,7 +6,7 @@ class WebView extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            loginFlag = false,
+            loginFlag: false,
             myName: '',
             myFriends: [],
             myID: null
