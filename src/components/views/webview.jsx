@@ -8,6 +8,7 @@ class WebView extends React.Component{
         this.checkLoginState = this.checkLoginState.bind(this);
         this.fetchprofile = this.fetchprofile.bind(this);
         this.statusChangeCallback = this.statusChangeCallback.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount(){
@@ -63,6 +64,10 @@ class WebView extends React.Component{
         } 
     }
 
+    handleClick() {
+        FB.login(this.checkLoginState());
+    }
+
     render(){
         return (
             <div>
@@ -72,15 +77,19 @@ class WebView extends React.Component{
                 data-width="450"
                 data-show-faces="true">
             </div>
+
+            <a href="#" onClick={this.handleClick} onlogin={this.checkLoginState}>Facebook Login</a>
           
-            <div class="fb-login-button" 
+
+
+            {/* <div class="fb-login-button" 
             data-onlogin="this.checkLoginState"
             data-max-rows="1" 
             data-size="large" 
             data-button-type="continue_with" 
             data-show-faces="false" 
             data-auto-logout-link="false" 
-            data-use-continue-as="false"></div>
+            data-use-continue-as="false"></div> */}
             </div>
         );
     }
