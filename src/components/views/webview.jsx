@@ -49,7 +49,7 @@ class WebView extends React.Component{
         console.log('Fetching profile.... ');
         FB.api('/me', function(response) {
             console.log('Successful login for: ' + response.name);
-            this.setState({
+            setState({
                 myName: response.name,
                 myID: response.id,
                 loginFlag: true
@@ -57,7 +57,7 @@ class WebView extends React.Component{
         });
         FB.api('/me/friends', function(response) {
             console.log(response);
-            this.setState({
+            setState({
                 myFriends: response.data.map(friend => friend.id)
             });
         });
