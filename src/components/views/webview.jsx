@@ -49,18 +49,18 @@ class WebView extends React.Component{
         console.log('Fetching profile.... ');
         FB.api('/me', function(response) {
             console.log('Successful login for: ' + response.name);
-            setState({
+            this.setState({
                 myName: response.name,
                 myID: response.id,
                 loginFlag: true
             });
-        });
+        }.bind(this));
         FB.api('/me/friends', function(response) {
             console.log(response);
-            setState({
+            this.setState({
                 myFriends: response.data.map(friend => friend.id)
             });
-        });
+        }.bind(this));
         //browserHistory.push('/dashboard');
     }
     // called when someone finishes with the Login Button
