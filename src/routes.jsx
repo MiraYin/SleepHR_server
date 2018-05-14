@@ -11,6 +11,7 @@ import Scoreboard from './components/views/scoreboard';
 import Report from './components/views/report';
 import Success from './components/views/success';
 import WebView from './components/views/webview';
+import Dashboard from './components/views/dashboard';
 
 /**
  * All routes go here.
@@ -24,6 +25,7 @@ export default (
     <Route path='report' component={Report}/>
     <Route path='success' component={Success}/>
     <Route path='webview' component={WebView}/>
+    <Route path='dashboard' component={Dashboard}/>
     <Route path='*' component={Home} />
   </Route>
 );

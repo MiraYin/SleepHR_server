@@ -1,14 +1,21 @@
 import React from 'react';
 import axios from 'axios';
 import {browserHistory} from 'react-router';
+import Scoreboard from './scoreboard';
+import Report from './report';
 
-class WebView extends React.Component{
+
+class Dashboard extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            myName: '',
+            myFriends: [],
+            myID: null
+        };
         this.checkLoginState = this.checkLoginState.bind(this);
         this.fetchprofile = this.fetchprofile.bind(this);
         this.statusChangeCallback = this.statusChangeCallback.bind(this);
-        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount(){
@@ -38,14 +45,21 @@ class WebView extends React.Component{
         }(document, 'script', 'facebook-jssdk'));
     }
 
-    //run after login is successful
     fetchprofile(){
         console.log('Fetching profile.... ');
         FB.api('/me', function(response) {
-        console.log('Successful login for: ' + response.name);
-        browserHistory.push('/dashboard');
-    });
-
+            console.log(response);
+            this.setState({
+                myName: response.name,
+                myID: response.id
+            });
+        });
+        FB.api('/me/friends', function(response) {
+            console.log(response);
+            this.setState({
+                myFriends: response.data.map(friend => friend.id)
+            });
+        });
     }
     // called when someone finishes with the Login Button
     checkLoginState() {
@@ -64,35 +78,21 @@ class WebView extends React.Component{
         } 
     }
 
-    handleClick() {
-        FB.login(this.checkLoginState());
-    }
-
     render(){
         return (
+        <div>
+            <h1>{'Welcome ' + this.state.myName}</h1>
+
             <div>
-            <div
-                class="fb-like"
-                data-share="true"
-                data-width="450"
-                data-show-faces="true">
+                <h2>Your sleep analysis report based on recent 10 records: </h2>
+                <Scoreboard location={{query:{_id: this.state.myID}}}/>
+                <Report location={{query: {_id: this.state.myID, analysisRange: 10}}}/>
             </div>
 
-            <a href="#" onClick={this.handleClick} onlogin={this.checkLoginState}>Facebook Login</a>
-          
 
-
-            {/* <div class="fb-login-button" 
-            data-onlogin="this.checkLoginState"
-            data-max-rows="1" 
-            data-size="large" 
-            data-button-type="continue_with" 
-            data-show-faces="false" 
-            data-auto-logout-link="false" 
-            data-use-continue-as="false"></div> */}
-            </div>
-        );
+        </div>);
     }
 }
 
-export default WebView;
+
+export default Dashboard;
