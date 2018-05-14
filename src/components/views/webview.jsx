@@ -10,6 +10,33 @@ class WebView extends React.Component{
         this.statusChangeCallback = this.statusChangeCallback.bind(this);
     }
 
+    componentDidMount(){
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1950569411924737',
+                xfbml      : true,
+                cookie     : true,
+                version    : 'v3.0'
+            });
+            FB.AppEvents.logPageView();
+            FB.Event.subscribe('auth.statusChange', function(response) {
+                if (response.authResponse) {
+                    this.checkLoginState();
+                } else {
+                    console.log('---->User cancelled login or did not fully authorize.');
+                }
+            }.bind(this));
+        }.bind(this);
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    }
+
     //run after login is successful
     fetchprofile(){
         console.log('Fetching profile.... ');
@@ -23,7 +50,7 @@ class WebView extends React.Component{
     checkLoginState() {
         FB.getLoginStatus(function(response) {
             this.statusChangeCallback(response);
-        });
+        }.bind(this));
     }
     
     // called with the results from from FB.getLoginStatus().
@@ -32,7 +59,7 @@ class WebView extends React.Component{
         console.log(response);
         if (response.status === 'connected') {
           // Logged into your app and Facebook.
-            this.fetchprofile()
+            this.fetchprofile();
         } 
     }
 
