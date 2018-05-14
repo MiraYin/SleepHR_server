@@ -61,6 +61,7 @@ class Dashboard extends React.Component{
             });
         });
     }
+    
     // called when someone finishes with the Login Button
     checkLoginState() {
         FB.getLoginStatus(function(response) {

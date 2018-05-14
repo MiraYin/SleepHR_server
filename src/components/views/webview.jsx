@@ -5,6 +5,12 @@ import {browserHistory} from 'react-router';
 class WebView extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            loginFlag = false,
+            myName: '',
+            myFriends: [],
+            myID: null
+        };
         this.checkLoginState = this.checkLoginState.bind(this);
         this.fetchprofile = this.fetchprofile.bind(this);
         this.statusChangeCallback = this.statusChangeCallback.bind(this);
@@ -42,10 +48,20 @@ class WebView extends React.Component{
     fetchprofile(){
         console.log('Fetching profile.... ');
         FB.api('/me', function(response) {
-        console.log('Successful login for: ' + response.name);
-        browserHistory.push('/dashboard');
-    });
-
+            console.log('Successful login for: ' + response.name);
+            this.setState({
+                myName: response.name,
+                myID: response.id,
+                loginFlag: true
+            });
+        });
+        FB.api('/me/friends', function(response) {
+            console.log(response);
+            this.setState({
+                myFriends: response.data.map(friend => friend.id)
+            });
+        });
+        //browserHistory.push('/dashboard');
     }
     // called when someone finishes with the Login Button
     checkLoginState() {
@@ -71,25 +87,25 @@ class WebView extends React.Component{
     render(){
         return (
             <div>
-            <div
+
+            <h1>{'Welcome ' + this.state.myName}</h1>
+            {!this.state.loginFlag && <a href="#" onClick={this.handleClick} onlogin={this.checkLoginState}>Facebook Login</a>}
+
+            {this.state.loginFlag &&
+                <div>
+                    <h2>Your sleep analysis report based on recent 10 records: </h2>
+                        <Scoreboard location={{query:{_id: this.state.myID}}}/>
+                        <Report location={{query: {_id: this.state.myID, analysisRange: 10}}}/>
+                </div>
+            }
+          
+
+            {/* <div
                 class="fb-like"
                 data-share="true"
                 data-width="450"
                 data-show-faces="true">
-            </div>
-
-            <a href="#" onClick={this.handleClick} onlogin={this.checkLoginState}>Facebook Login</a>
-          
-
-
-            {/* <div class="fb-login-button" 
-            data-onlogin="this.checkLoginState"
-            data-max-rows="1" 
-            data-size="large" 
-            data-button-type="continue_with" 
-            data-show-faces="false" 
-            data-auto-logout-link="false" 
-            data-use-continue-as="false"></div> */}
+            </div> */}
             </div>
         );
     }
