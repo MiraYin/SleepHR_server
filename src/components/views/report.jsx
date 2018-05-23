@@ -203,7 +203,7 @@ class Charts extends React.Component{
 							    </div>
                             </div>
                         );
-                    })
+                    }.bind(this))
                 }
                 </div>
             </div>
