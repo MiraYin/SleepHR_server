@@ -176,12 +176,9 @@ class Charts extends React.Component{
                                 duration = (item.end - item.start),
 								size = duration / (max-min) * 100;
                             
-                            var rangeLabelStart = item.date, rangeLabelEnd = item.date;
-                            rangeLabelStart.setMinutes(this.props.data[itemIndex].start * 60);
-                            rangeLabelEnd.setMinutes(this.props.data[itemIndex].end * 60);
                             var rangeLabel = item.date.toLocaleDateString() + ": " 
-                                            + rangeLabelStart.toLocaleTimeString() + " - " 
-                                            + rangeLabelEnd.toLocaleTimeString();
+                                            + this.props.data.sleepdate.toLocaleTimeString() + " - " 
+                                            + item.date.toLocaleTimeString();
 
 							style = {
 								backgroundColor: color,
@@ -273,6 +270,7 @@ class Report extends React.Component{
                     periodData.push({
                         start: sleepdate.getHours() + sleepdate.getMinutes()/60 - 24,
                         end: wakedate.getHours() + wakedate.getMinutes() / 60,
+                        sleepdate: sleepdate,
                         date: wakedate,
                         sleepQuality: dataCopy[i].sleepQuality
                     });
@@ -280,6 +278,7 @@ class Report extends React.Component{
                     periodData.push({
                         start: sleepdate.getHours() + sleepdate.getMinutes()/60,
                         end: wakedate.getHours() + wakedate.getMinutes() / 60,
+                        sleepDate: sleepdate,
                         date: wakedate,
                         sleepQuality: dataCopy[i].sleepQuality
                     });
