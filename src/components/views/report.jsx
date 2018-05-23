@@ -94,6 +94,7 @@ class Pie extends React.Component{
             startAngle = 0;
 
 		return (
+            <div>
 			<svg width={ diameter } height={ diameter } viewBox={ '0 0 ' + diameter + ' ' + diameter } xmlns="http://www.w3.org/2000/svg" version="1.1">
                 { Object.entries(this.props.data).map((reason, index) => {
                     var angle, nextAngle, percent;
@@ -116,6 +117,7 @@ class Pie extends React.Component{
                     />);
                 })}
 			</svg>
+            </div>
 		);
 	}
 }
@@ -165,7 +167,6 @@ class Charts extends React.Component{
         return (
             <div className='Charts horizontal'>
                 <div className='Charts--serie'>
-                    <label>Sleep Analysis</label>
                     {
                         data.map(function (item, itemIndex) {
                             console.log("item.end: " + item.end);
@@ -290,9 +291,11 @@ class Report extends React.Component{
 
         return(
             <div className='report'>
+                <h1>Your staying up reason analysis:</h1>
                 <div>
-        {(reasonSum? (Object.keys(reasonData).length > 1 ? <Pie data={reasonData} sum={reasonSum}/>: <h1>The only reason for staying up late found in 10 days is: {Object.keys(reasonData)[0]}</h1>) : <h1>No Staying Up Record found in 10 days. Good Job! Keep it Up!</h1>)}
+        {(reasonSum? (Object.keys(reasonData).length > 1 ? <Pie data={reasonData} sum={reasonSum}/>: <h2>The only reason for staying up late found in 10 days is: {Object.keys(reasonData)[0]}</h2>) : <h2>No Staying Up Record found in 10 days. Good Job! Keep it Up!</h2>)}
                 </div>
+                <h1>Your bedtime analysis:</h1>
                 <div>
                     <Charts data={ periodData } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']}/>
                     <Legend labels={ [0, 1, 2, 3, 4].map(item => 'SleepQuality: '+item) } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']} />
