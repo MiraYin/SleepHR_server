@@ -22,7 +22,8 @@ class Scoreboard extends React.Component {
         this.state = {
             data: [],
         };
-        this.compareBy.bind(this);
+        this.compareByStayUpRate.bind(this);
+        this.compareByLongestDays.bind(this);
         this.sortBy.bind(this);
   }
   
@@ -36,7 +37,7 @@ class Scoreboard extends React.Component {
                 return ({
                     fbid: friend.fbid,
                     name: friend.userName,
-                    longestDays: friend.longestDays? friend.longestDays: NaN,
+                    longestDays: friend.hasOwnProperty('longestDays')? friend.longestDays: NaN,
                     stayUpRate: friend.surveys.length? (friend.stayUpDays / friend.surveys.length * 100).toFixed(2) : NaN
                 });
             })
@@ -55,29 +56,42 @@ class Scoreboard extends React.Component {
     }
 
 
-  compareBy(key, increase) {
-    return function (a, b) {
-        if(!isFinite(a) && !isFinite(b)){
+  compareByLongestDays(a, b) {
+        if(!isFinite(a['longestDays']) && !isFinite(b['longestDays'])){
             return 0;
         }
-        if( !isFinite(a) ) {
+        if( !isFinite(a['longestDays']) ) {
             return -1;
         }
-        if( !isFinite(b) ) {
+        if( !isFinite(b['longestDays']) ) {
             return 1;
         }
-        return (increase ? a[key]-b[key] : b[key]-a[key]);
-    };
+        return b['longestDays']-a['longestDays'];
+  }
+
+  compareByStayUpRate(a, b) {
+        if(!isFinite(a['stayUpRate']) && !isFinite(b['stayUpRate'])){
+            return 0;
+        }
+        if( !isFinite(a['stayUpRate']) ) {
+            return -1;
+        }
+        if( !isFinite(b['stayUpRate']) ) {
+            return 1;
+        }
+        return a['stayUpRate']-b['stayUpRate'];
   }
  
   sortBy(key) {
+    console.log("sortby "+key);
     let arrayCopy = [...this.state.data];
     if(key === 'longestDays'){
-        arrayCopy.sort(this.compareBy(key, false));
+        arrayCopy.sort(this.compareByLongestDays);
     }
     if(key === 'stayUpRate'){
-        arrayCopy.sort(this.compareBy(key, true));
+        arrayCopy.sort(this.compareByStayUpRate);
     }
+    console.log(arrayCopy);
     this.setState({data: arrayCopy});
   }
     
