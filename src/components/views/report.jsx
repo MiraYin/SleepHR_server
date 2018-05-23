@@ -176,6 +176,13 @@ class Charts extends React.Component{
                                 duration = (item.end - item.start),
 								size = duration / (max-min) * 100;
                             
+                            var rangeLabelStart = item.date, rangeLabelEnd = item.date;
+                            rangeLabelStart.setMinutes(this.props.data[itemIndex].start * 60);
+                            rangeLabelEnd.setMinutes(this.props.data[itemIndex].end * 60);
+                            var rangeLabel = item.date.toLocaleDateString() + ": " 
+                                            + rangeLabelStart.toLocaleTimeString() + " - " 
+                                            + rangeLabelEnd.toLocaleTimeString();
+
 							style = {
 								backgroundColor: color,
 								opacity: duration / (max-min) + .05,
@@ -187,7 +194,7 @@ class Charts extends React.Component{
 							
 						 return (
                             <div key={ itemIndex }>
-                                <div className='labelitem'>{item.date.toLocaleDateString()}</div>
+                                <div className='labelitem'>{rangeLabel}</div>
 							    <div
 							 	    className='Charts--item'
 							 	    style={ style }
