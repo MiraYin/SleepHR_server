@@ -61,10 +61,10 @@ class Scoreboard extends React.Component {
             return 0;
         }
         if( !isFinite(a['longestDays']) ) {
-            return -1;
+            return 1;
         }
         if( !isFinite(b['longestDays']) ) {
-            return 1;
+            return -1;
         }
         return b['longestDays']-a['longestDays'];
   }
@@ -74,10 +74,10 @@ class Scoreboard extends React.Component {
             return 0;
         }
         if( !isFinite(a['stayUpRate']) ) {
-            return -1;
+            return 1;
         }
         if( !isFinite(b['stayUpRate']) ) {
-            return 1;
+            return -1;
         }
         return a['stayUpRate']-b['stayUpRate'];
   }
