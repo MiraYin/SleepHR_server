@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import {browserHistory} from 'react-router';
+import Scoreboard from './scoreboard';
+import Report from './report';
 
 class WebView extends React.Component{
     constructor(props){
@@ -48,7 +50,6 @@ class WebView extends React.Component{
     fetchprofile(){
         console.log('Fetching profile.... ');
         FB.api('/me', function(response) {
-            console.log('Successful login for: ' + response.name);
             var state = {
                 myName: response.name,
                 myID: response.id,
