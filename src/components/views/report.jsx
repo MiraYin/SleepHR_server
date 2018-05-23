@@ -192,7 +192,7 @@ class Charts extends React.Component{
 							
 						 return (
                             <div key={ itemIndex }>
-                                <div className='labelitem'>{rangeLabel}</div>
+                                <div className='labelitem' style={{color: item.stayUp? '#A4794F' : '#808080'}}>{rangeLabel}</div>
 							    <div
 							 	    className='Charts--item'
 							 	    style={ style }
@@ -273,6 +273,7 @@ class Report extends React.Component{
                         end: wakedate.getHours() + wakedate.getMinutes() / 60,
                         sleepdate: sleepdate,
                         date: wakedate,
+                        stayUp: dataCopy[i].stayUp,
                         sleepQuality: dataCopy[i].sleepQuality
                     });
                 }else{
@@ -281,6 +282,7 @@ class Report extends React.Component{
                         end: wakedate.getHours() + wakedate.getMinutes() / 60,
                         sleepdate: sleepdate,
                         date: wakedate,
+                        stayUp: dataCopy[i].stayUp,
                         sleepQuality: dataCopy[i].sleepQuality
                     });
                 }
@@ -297,8 +299,8 @@ class Report extends React.Component{
                 </div>
                 <h1>Your bedtime analysis:</h1>
                 <div>
-                    <Charts data={ periodData } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']}/>
-                    <Legend labels={ [0, 1, 2, 3, 4].map(item => 'SleepQuality: '+item) } colors={['#D3D3D3', '#A9A9A9', '#808080', '#696969', '#404040']} />
+                    <Charts data={ periodData } colors={['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']}/>
+                    <Legend labels={ [0, 1, 2, 3, 4].map(item => 'SleepQuality: '+item) } colors={['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']} />
                 </div>
             </div>
         );
